@@ -5,7 +5,7 @@ from torch.nn import Linear
 from torch_geometric.nn import MLP, DynamicEdgeConv, global_max_pool
 
 # %%
-class SimCLR(nn.Module):
+class SimCLRPointCloud(nn.Module):
     def __init__(self, augmentation, k=20, aggregation='max'):
         super().__init__()
         self.augmentation = augmentation
@@ -63,7 +63,7 @@ if __name__=='__main__':
     dataset = ShapeNet(root='../data/ShapeNet/', categories=['Table', 'Lamp', 'Guitar', 'Motorbike']).shuffle()[:5000]
 
     augmentation = T.Compose([T.RandomJitter(0.005), T.RandomFlip(1), T.RandomShear(0.3)])
-    model = SimCLR(augmentation=augmentation)
+    model = SimCLRPointCloud(augmentation=augmentation)
 
     h1, h2, compact_h1, compact_h2 = model(dataset[0])
     
