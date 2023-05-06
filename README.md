@@ -8,35 +8,24 @@ Applying SimCLRv2 on point cloud dataset to learn how contrastive learning works
 - I use the ShapeNet dataset, which comes with class labels, but for this project, I will pretend the labels don't exist.
 
 ## Environment Setup
-`./txt/installation_instructions.txt` file contains the conda install commands required to run the project.
+`/txt/installation_instructions.txt` file contains the conda install commands required to run the project.
 
 ## Download ShapeNet Dataset
-Once the environment is set up, run the `./data/download_shapenet_data.py` file to download the ShapeNet dataset to `./data/ShapeNet`. New directories will be created.
+Once the environment is set up, run the `/data/download_shapenet_data.py` file to download the ShapeNet dataset to `./data/ShapeNet`. New directories will be created.
 
 ## ShapeNet EDA
 Some sample visualizations of the original data and augmented data is available in `/experiments/EDA.py`. See next session for information on augmentations.
 
 
-**Figure: Sample Point Cloud Dataset of a Table**
+**Figure: Sample Point Cloud Dataset of a Table, Before and After Augmentation (Jitter, Flip, Shear)**
 <p align='center'>
     <img src='/README_imgs/Table.png' width='450' title='Point Cloud of Sample Table'>
 </p>
 
-**Figure: Data Augmentation (Jitter, Flip, Shear) Applied to Table Point Cloud**
-<p align='center'>
-    <img src='/README_imgs/TableAugmented.png' width='450' title='Point Cloud of Sample Table with Augmentations'>
-</p>
-
-**Figure: Sample Point Cloud Dataset of a Motorbike**
+**Figure: Sample Point Cloud Dataset of a Motorbike, Before and After Augmentation (Jitter, Flip, Shear)**
 <p align='center'>
     <img src='/README_imgs/Motorbike.png' width='450' title='Point Cloud of Sample Motorbike'>
 </p>
-
-**Figure: Data Augmentation (Jittering, Shifting, Shearing) Applied to Table Point Cloud**
-<p align='center'>
-    <img src='/README_imgs/MotorbikeAugmented.png' width='450' title='Point Cloud of Sample Motorbike with Augmentations'>
-</p>
-
 
 ## Preprocess Dataset
 Run the `./data/preprocess_data.py` file, which contains the script to preprocess the dataset before it can be used for SimCLRv2 contrastive learning. The preprocessing steps include:
@@ -46,3 +35,7 @@ Run the `./data/preprocess_data.py` file, which contains the script to preproces
     - Rotation (if used layer is not rotation invariant)
     - Jittering (adding noise to the coordinates)
     - Shifting / Shearing
+
+
+## References
+- https://youtu.be/gm_oW0bdzHs
