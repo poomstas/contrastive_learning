@@ -2,3 +2,7 @@ conda install pytorch==1.13.0 torchvision==0.14.0 torchaudio==0.13.0 pytorch-cud
 conda install pyg==2.3.0 -c pyg
 conda install plotly==5.14.1
 conda install pytorch-lightning==2.0.2 -c conda-forge
+conda install pandas==2.0.1
+
+pip install --upgrade nbformat
+
