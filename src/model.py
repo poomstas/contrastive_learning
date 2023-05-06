@@ -8,17 +8,11 @@ from torch_geometric.nn import MLP, DynamicEdgeConv, global_max_pool
 class SimCLRPointCloud(nn.Module):
     def __init__(self, augmentation, k=20, aggregation='max'):
         super().__init__()
-        self.augmentation = augmentation
-
-        # Feature extraction
-        self.conv1 = DynamicEdgeConv(MLP([2 * 3, 64, 64]), k, aggregation)
-        self.conv2 = DynamicEdgeConv(MLP([2 * 64, 128]), k, aggregation)
-
-        # Encoder head 
-        self.lin1 = Linear(128 + 64, 128)
-
-        # Projection head (See explanation in SimCLRv2)
-        self.mlp = MLP([128, 256, 32], norm=None)
+        self.augmentation = augmentation                                    # Define augmentations. Has to be probabilistic.
+        self.conv1 = DynamicEdgeConv(MLP([2*3, 64, 64]), k, aggregation)    # Feature Extraction 1
+        self.conv2 = DynamicEdgeConv(MLP([2*64, 128]), k, aggregation)      # Feature Extraction 2
+        self.lin = Linear(128 + 64, 128)                                    # Encoder Head
+        self.mlp = MLP([128, 256, 32], norm=None)                           # Projection head
 
     def forward(self, data, train=True):
         if train:
@@ -33,12 +27,12 @@ class SimCLRPointCloud(nn.Module):
             # Get representations for first augmented view
             x1 = self.conv1(pos1, batch1)
             x2 = self.conv2(x1, batch1)
-            h_points_1 = self.lin1(torch.cat([x1, x2], dim=1))
+            h_points_1 = self.lin(torch.cat([x1, x2], dim=1))
 
             # Get representations for second augmented view
             x1 = self.conv1(pos2, batch2)
             x2 = self.conv2(x1, batch2)
-            h_points_2 = self.lin1(torch.cat([x1, x2], dim=1))
+            h_points_2 = self.lin(torch.cat([x1, x2], dim=1))
             
             # Global representation
             h1 = global_max_pool(h_points_1, batch1)
