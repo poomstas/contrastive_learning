@@ -41,7 +41,7 @@ class SimCLRPointCloud(nn.Module):
         else:
             x1 = self.conv1(data.pos, data.batch)
             x2 = self.conv2(x1, data.batch)
-            h_points = self.lin1(torch.cat([x1, x2], dim=1))
+            h_points = self.lin(torch.cat([x1, x2], dim=1))
             return global_max_pool(h_points, data.batch)
 
         # Transformation for loss function
