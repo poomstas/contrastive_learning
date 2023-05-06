@@ -5,4 +5,4 @@ conda install pytorch-lightning==2.0.2 -c conda-forge
 conda install pandas==2.0.1
 
 pip install --upgrade nbformat
-
+pip install pytorch-metric-learning -q 
