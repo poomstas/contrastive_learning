@@ -3,7 +3,7 @@ conda install pyg==2.3.0 -c pyg
 conda install plotly==5.14.1
 conda install pytorch-lightning==2.0.2 -c conda-forge
 conda install pandas==2.0.1
+conda install pytorch-cluster -c pyg
 
 pip install --upgrade nbformat==5.8.0
 pip install pytorch-metric-learning==2.1.1
-pip install torch-cluster==1.6.1
