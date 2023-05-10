@@ -93,8 +93,7 @@ class TrainSimCLR(pl.LightningModule):
 
 
     def validation_step(self, batch, batch_idx):
-        out = self.model(batch, train=False)
-        return out
+        return
 
 
     def training_step(self, batch, batch_idx):
@@ -143,10 +142,6 @@ if __name__=='__main__':
         logger                          = [],
         callbacks                       = [cb_checkpoint])
 
-    model = TrainSimCLR(
-        ONECYCLELR_MAX_LR               = config['ONECYCLELR_MAX_LR'],
-        ONECYCLELR_PCT_START            = config['ONECYCLELR_PCT_START'],
-        ONECYCLELR_DIV_FACTOR           = config['ONECYCLELR_DIV_FACTOR'],
-        ONECYCLELR_FINAL_DIV_FACTOR     = config['ONECYCLELR_FINAL_DIV_FACTOR'])
+    model = TrainSimCLR()
 
     trainer.fit(model)
