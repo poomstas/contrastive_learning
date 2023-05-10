@@ -1,17 +1,15 @@
 # %%
 import socket
-import argparse
 
 import torch
 from datetime import datetime
 
 from src.paths import DATA
 from src.model import SimCLRPointCloud
-from src.util_parse_arguments import parse_arguments, get_dict_from_args
 
 import pytorch_lightning as pl
 from pytorch_lightning import Trainer
-from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
+from pytorch_lightning.callbacks import ModelCheckpoint
 
 import torch_geometric.transforms as T
 from torch_geometric.data import DataLoader
@@ -23,8 +21,8 @@ class TrainSimCLR(pl.LightningModule):
     def __init__(self,  
                  AUGMENTATIONS                  = T.Compose([T.RandomJitter(0.005), T.RandomFlip(1), T.RandomShear(0.3)]),
                  LR                             = 0.001,
-                 BATCH_SIZE                     = 64,
-                 NUM_EPOCHS                     = 10000,
+                 BATCH_SIZE                     = 60,
+                 NUM_EPOCHS                     = 1000,
                  CATEGORIES                     = ['Table', 'Lamp', 'Guitar', 'Motorbike'],
                  N_DATASET                      = 5000,
                  TEMPERATURE                    = 0.10,
@@ -57,21 +55,14 @@ class TrainSimCLR(pl.LightningModule):
         print('='*90)
 
 
-    def prepare_data(self) -> None:
-        self.data = ShapeNet(root=DATA, categories=self.categories).shuffle()[:self.n_dataset]
-
-
     def train_dataloader(self):
-        return self.dataloader
-
-
-    def val_dataloader(self): # In this case (unsupervised learning), val_dataloader is the same as train_dataloader
-        self.dataloader = DataLoader(dataset        = self.data,
-                                     batch_size     = self.bs,
-                                     shuffle        = False,
-                                     num_workers    = 12,
-                                     pin_memory     = True) # pin_memory=True to keep the data in GPU
-        return self.dataloader
+        data = ShapeNet(root=DATA, categories=self.categories).shuffle()[:self.n_dataset]
+        self.train_dataloader = DataLoader(dataset        = data,
+                                           batch_size     = self.bs,
+                                           shuffle        = False,
+                                           num_workers    = 12,
+                                           pin_memory     = True) # pin_memory=True to keep the data in GPU
+        return self.train_dataloader
 
 
     def configure_optimizers(self):
@@ -90,10 +81,6 @@ class TrainSimCLR(pl.LightningModule):
         else:
             max_pool_val = self.model(data, train=train)
             return max_pool_val
-
-
-    def validation_step(self, batch, batch_idx):
-        return
 
 
     def training_step(self, batch, batch_idx):
@@ -120,23 +107,17 @@ class TrainSimCLR(pl.LightningModule):
 if __name__=='__main__':
     torch.set_float32_matmul_precision('medium') # medium or high. See: https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
     hostname            = socket.gethostname()
+    run_ID = '_'.join([hostname, datetime.now().strftime('%Y%m%d_%H%M%S')])
     print('Hostname: {}'.format(hostname))
 
-    parser = argparse.ArgumentParser(description='Parse hyperparameter arguments from CLI')
-    args = parse_arguments(parser) # Reference values like so: args.alpha 
-    config = get_dict_from_args(args)
-
-    run_ID = '_'.join([hostname, config['NOTE'], datetime.now().strftime('%Y%m%d_%H%M%S')])
-
     cb_checkpoint = ModelCheckpoint(dirpath     = './model_checkpoint/{}/'.format(run_ID), 
-                                    monitor     = 'val_loss', 
-                                    filename    = '{epoch:02d}-{val_loss:.5f}',
+                                    monitor     = 'loss', 
+                                    filename    = '{epoch:02d}-{loss:.5f}',
                                     save_top_k  = 10)
 
     trainer = Trainer(
         accelerator                     = 'gpu',
-        devices                         = 'auto',
-        max_epochs                      = config['NUM_EPOCHS'], 
+        devices                         = [0],                          # or use 'auto'
         log_every_n_steps               = 1,
         fast_dev_run                    = False, # Run a single-batch through train & val and see if the code works
         logger                          = [],
