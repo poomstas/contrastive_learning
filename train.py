@@ -28,11 +28,8 @@ class TrainSimCLR(pl.LightningModule):
                  CATEGORIES                     = ['Table', 'Lamp', 'Guitar', 'Motorbike'],
                  N_DATASET                      = 5000,
                  TEMPERATURE                    = 0.10,
-
-                 ONECYCLELR_MAX_LR              = 0.0005,
-                 ONECYCLELR_PCT_START           = 0.3,     # The percentage of the cycle spent increasing the learning rate Default: 0.3
-                 ONECYCLELR_DIV_FACTOR          = 25,      # Determines the initial learning rate via initial_lr = max_lr/div_factor Default: 25
-                 ONECYCLELR_FINAL_DIV_FACTOR    = 0.08,    # Determines the minimum learning rate via min_lr = initial_lr/final_div_factor Default: 1e4
+                 STEP_LR_STEP_SIZE              = 20,
+                 STEP_LR_GAMMA                  = 0.5,
     ):
 
 
@@ -46,14 +43,12 @@ class TrainSimCLR(pl.LightningModule):
         self.categories                         = CATEGORIES
         self.n_dataset                          = N_DATASET
 
+        self.step_lr_step_size                  = STEP_LR_STEP_SIZE
+        self.step_lr_gamma                      = STEP_LR_GAMMA
+
         self.model                              = SimCLRPointCloud(self.augmentations)
         self.loss                               = NTXentLoss(temperature=TEMPERATURE)
         self.loss_cum                           = 0
-
-        self.ONECYCLELR_MAX_LR                  = ONECYCLELR_MAX_LR
-        self.ONECYCLELR_PCT_START               = ONECYCLELR_PCT_START
-        self.ONECYCLELR_DIV_FACTOR              = ONECYCLELR_DIV_FACTOR
-        self.ONECYCLELR_FINAL_DIV_FACTOR        = ONECYCLELR_FINAL_DIV_FACTOR
 
         print('='*90)
         print('MODEL HYPERPARAMETERS')
@@ -81,13 +76,9 @@ class TrainSimCLR(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
-        scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer,
-                                                        epochs              = self.n_epochs,
-                                                        steps_per_epoch     = int(round(1.1*len(self.data)/self.bs)), # Stretch the schedule extra 10% to prevent bug. See: https://discuss.pytorch.org/t/lr-scheduler-onecyclelr-causing-tried-to-step-57082-times-the-specified-number-of-total-steps-is-57080/90083/3
-                                                        max_lr              = self.ONECYCLELR_MAX_LR,
-                                                        pct_start           = self.ONECYCLELR_PCT_START,
-                                                        div_factor          = self.ONECYCLELR_DIV_FACTOR,
-                                                        final_div_factor    = self.ONECYCLELR_FINAL_DIV_FACTOR)
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer,
+                                                    step_size   = self.step_lr_step_size,
+                                                    gamma       = self.step_lr_gamma)
         scheduler = {'scheduler': scheduler, 'interval': 'step'}
         return [optimizer], [scheduler]
 
