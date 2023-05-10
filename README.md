@@ -1,5 +1,8 @@
 # Contrastive Learning on Point Cloud Dataset ShapeNet
-Applying SimCLRv2 on point cloud dataset to learn how contrastive learning works
+Standard supervised learning requires labeled datasets, the construction of which can be costly in time and labor. 
+SimCLR, described in the Google AI paper "A Simple Framework for Contrastive Learning of Visual Representations" is one of many unsupervised learning approaches that can help reduce such cost.
+In this repo, I make use of SimCLR and Dynamic Graph CNN ("Dynamic Graph CNN for Learning on Point Clouds") to acquire an unsupervised representation of point cloud dataset, and compare the results to actual class labels.
+This is a precursor to the subsequent work that will create a generative model that produces new point cloud representation of objects.
 
 # Project Overview
 ## Project Description
@@ -59,5 +62,7 @@ Run the `./data/preprocess_data.py` file, which contains the script to preproces
 ## Testing the SimCLR Model
 
 # References
-- [](https://youtu.be/gm_oW0bdzHs)
+- [YouTube: Deep Learning on Point Clouds](https://youtu.be/gm_oW0bdzHs)
 - [SimCLR Explained](https://youtu.be/APki8LmdJwY)
+- [Google AI Post on SimCLR](https://ai.googleblog.com/2020/04/advancing-self-supervised-and-semi.html)
+- [SimCLR Paper](https://arxiv.org/abs/2002.05709)
