@@ -22,7 +22,7 @@ class TrainSimCLR(pl.LightningModule):
                  AUGMENTATIONS                  = T.Compose([T.RandomJitter(0.005), T.RandomFlip(1), T.RandomShear(0.3)]),
                  LR                             = 0.001,
                  BATCH_SIZE                     = 60,
-                 NUM_EPOCHS                     = 1000,
+                 NUM_EPOCHS                     = 10,
                  CATEGORIES                     = ['Table', 'Lamp', 'Guitar', 'Motorbike'],
                  N_DATASET                      = 5000,
                  TEMPERATURE                    = 0.10,
