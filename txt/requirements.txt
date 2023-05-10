@@ -4,6 +4,7 @@ conda install plotly==5.14.1
 conda install pytorch-lightning==2.0.2 -c conda-forge
 conda install pandas==2.0.1
 conda install pytorch-cluster -c pyg
+conda install seaborn==0.12.2
 
 pip install --upgrade nbformat==5.8.0
 pip install pytorch-metric-learning==2.1.1
