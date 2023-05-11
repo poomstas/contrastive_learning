@@ -15,12 +15,12 @@ from experiments.EDA import plot_3d_shape
 # %%
 CKPT_PATH = '/home/brian/github/contrastive_learning_point_cloud/model_checkpoint/aorus_20230510_114317/epoch=06-loss=0.50589.ckpt'
 
-model = TrainSimCLR.load_from_checkpoint(CKPT_PATH)
+model = TrainSimCLR.load_from_checkpoint(CKPT_PATH, map_location=torch.device('cuda:1'))
 dataset = ShapeNet(root=DATA, categories=['Table', 'Lamp', 'Guitar', 'Motorbike']).shuffle()[:5000]
 dataloader = DataLoader(dataset, batch_size=128, shuffle=True)
 
 # %%
-sample = next(iter(dataloader)).to('cuda:0')
+sample = next(iter(dataloader)).to('cuda:1')
 
 h = model(sample, train=False)
 h = h.cpu().detach()
