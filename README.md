@@ -1,22 +1,31 @@
 # Contrastive Learning on Point Cloud Dataset ShapeNet
-Standard supervised learning requires labeled datasets, the construction of which can be costly in time and labor. 
+Standard supervised learning using deep learning models requires a large amount of labeled datasets, the construction of which can be costly in time and labor. Many unsupervised learning methods are introduced to help overcome the challenge. 
+
 SimCLR, described in the Google AI paper "A Simple Framework for Contrastive Learning of Visual Representations" is one of many unsupervised learning approaches that can help reduce such cost.
-In this repo, I make use of SimCLR and Dynamic Graph CNN ("Dynamic Graph CNN for Learning on Point Clouds") to acquire an unsupervised representation of point cloud dataset, and compare the results to actual class labels.
-This is a precursor to the subsequent work that will create a generative model that produces new point cloud representation of objects.
+
+SimCLR was originally used with image datasets for visual representations; in this work, I make use of SimCLR and Dynamic Graph CNN ("Dynamic Graph CNN for Learning on Point Clouds") to acquire an unsupervised representation of objects in a point cloud dataset (ShapeNet), and compare the results to actual class labels.
+
 
 # Project Overview
-## Project Description
-- Implement a self-supervised representational learning of 3D shapes.
-- Using [SimCLRv2](https://arxiv.org/abs/2002.05709), which was originally used on 2D image datasets, and the
-- ShapeNet dataset, which contains 3D point cloud of various objects with class labels. For this project, I will pretend the labels don't exist, except for the very end where I will validate the results.
-- To extract latent features from point clouds, I use the [EdgeConv Model](https://arxiv.org/abs/1801.07829). Alternative models include PointNet, PointNet++, PointTransformer, SE(3)-Transformers, etc.
-- The output of the dataset can be used for downstream tasks such as clustering, fine-tuning, and outlier detection.
-- I also use the PyTorch Lightning module for fast implementation.
+## Objectives
+- Implement a self-supervised representational learning of 3D shapes represented as point cloud data.
+- Compare the results of self-supervised learning with the object labels to see if they coincide well.
+
+## Implementational Details
+- I use [SimCLRv2](https://arxiv.org/abs/2002.05709), which was originally used on 2D image datasets, and 
+- [ShapeNet](https://shapenet.org/) dataset, which contains 3D point cloud of various objects with class labels. 
+- To extract latent features from point clouds, I use the [EdgeConv Model](https://arxiv.org/abs/1801.07829). 
+- Using PyTorch Lightning for fast implementation.
+- I will pretend the labels don't exist, except for the very end where I will validate the results. 
+
+
+The output of the dataset can be used for downstream tasks such as clustering, fine-tuning, and outlier detection.
 
 ## Feature Extraction from Point Clouds
+EdgeConv model proposed by the paper *Dynamic Graph CNN for Learning on Point Clouds* is used to extract key features from point cloud data. A simple implementation is available in `torch_geometric`.
 
-## Contrastive Learning: Objective
-- 
+Alternative models include PointNet, PointNet++, PointTransformer, SE(3)-Transformers, etc.
+
 
 ## Contrastive Learning: SimCLR
 - SimCLR (4x) (contrastive learning, without labels) was able to achieve the same classification accuracy as a ResNet-50 trained with supervised learning (with labels). [Ref]
@@ -66,3 +75,5 @@ Run the `./data/preprocess_data.py` file, which contains the script to preproces
 - [SimCLR Explained](https://youtu.be/APki8LmdJwY)
 - [Google AI Post on SimCLR](https://ai.googleblog.com/2020/04/advancing-self-supervised-and-semi.html)
 - [SimCLR Paper](https://arxiv.org/abs/2002.05709)
+
+TODO: Do supervised point cloud classification and compare results. See: [Video](https://www.youtube.com/watch?v=ctdi4Fjp_50&t=21s&ab_channel=ConnorShorten)
