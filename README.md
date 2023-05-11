@@ -1,9 +1,9 @@
 # Contrastive Learning on Point Cloud Dataset ShapeNet
 Standard supervised learning using deep learning models requires a large amount of labeled datasets, the construction of which can be costly in time and labor. Many unsupervised learning methods are introduced to help overcome the challenge. 
 
-SimCLR, described in the Google AI paper "A Simple Framework for Contrastive Learning of Visual Representations" is one of many unsupervised learning approaches that can help reduce such cost.
+`SimCLR`, described in the Google AI paper "A Simple Framework for Contrastive Learning of Visual Representations" is one of many unsupervised learning approaches that can help reduce such cost.
 
-SimCLR was originally used with image datasets for visual representations; in this work, I make use of SimCLR and Dynamic Graph CNN (*Dynamic Graph CNN for Learning on Point Clouds*) to acquire an unsupervised representation of objects in a point cloud dataset (ShapeNet), and compare the results to actual class labels.
+`SimCLR` was originally used with image datasets for visual representations; in this work, I make use of `SimCLR` and `Dynamic Graph CNN` (*Dynamic Graph CNN for Learning on Point Clouds*) to acquire an unsupervised representation of objects in a point cloud dataset (`ShapeNet`), and compare the results to actual class labels.
 
 
 # Project Overview
@@ -12,29 +12,35 @@ SimCLR was originally used with image datasets for visual representations; in th
 - Compare the results of self-supervised learning with the object labels to see if they coincide well.
 
 ## Implementational Details
-- I use [SimCLRv2](https://arxiv.org/abs/2002.05709), which was originally used on 2D image datasets, and 
-- [ShapeNet](https://shapenet.org/) dataset, which contains 3D point cloud of various objects with class labels. 
-- To extract latent features from point clouds, I use the [EdgeConv Model](https://arxiv.org/abs/1801.07829). 
+- I use [`SimCLRv2`](https://arxiv.org/abs/2002.05709), which was originally used on 2D image datasets, and 
+- [`ShapeNet`](https://shapenet.org/) dataset, which contains 3D point cloud of various objects with class labels. 
+- To extract latent features from point clouds, I use the [`EdgeConv` Model](https://arxiv.org/abs/1801.07829). 
 - Using PyTorch Lightning for fast implementation.
-- I will pretend the labels don't exist, except for the very end where I will validate the results. 
+- During training, I pretend that the class labels don't exist.
 
 
-The output of the dataset can be used for downstream tasks such as clustering, fine-tuning, and outlier detection.
+The trained model's output can be used for downstream tasks such as clustering, fine-tuning, and outlier detection.
 
 ## Feature Extraction from Point Clouds
-EdgeConv model proposed by the paper *Dynamic Graph CNN for Learning on Point Clouds* is used to extract key features from point cloud data. A simple implementation is available in `torch_geometric`.
+`EdgeConv` model proposed by the paper *Dynamic Graph CNN for Learning on Point Clouds* is used to extract key features from point cloud data. A simple implementation is available in `torch_geometric`.
 
-EdgeConv model is used as a replacement to ResNet-50 base encoder in the original SimCLR paper, as the data type used in this work is point cloud, not image.
+`EdgeConv` model is used as a replacement to `ResNet-50` base encoder in the original `SimCLR` paper, as the data type used in this work is point cloud, not image.
 
-EdgeConv model is selected because of its unique advantages, some of which include:
+`EdgeConv` model is selected because of its unique advantages, some of which include:
 - flexible feature learning
 - robust to point cloud perturbations
 - capable of end-to-end learning
 
-Alternatives to the EdgeConv model include include PointNet, PointNet++, PointTransformer, SE(3)-Transformers, etc.
+Alternatives to the `EdgeConv` model include include `PointNet`, `PointNet++`, `PointTransformer`, and `SE(3)-Transformers`.
 
 
 ## Contrastive Learning: the SimCLR Model
+The model architecture used for `SimCLR` is visualized below (from the original pape).
+
+<p align='center'>
+    <img src='/README_imgs/SimCLR_model.png' width='600' title='SimCLR Model Architecture'>
+</p>
+
 
 Model is implemented in `./src/model.py` file. 
 
@@ -83,7 +89,7 @@ Seeing the results is straightforward. The trained model, in its inference mode,
 
 **Figure: t-SNE 2D Representation of Extracted Features**
 <p align='center'>
-    <img src='/README_imgs/tsne_results.png' width='600' title='Point Cloud of Sample Table'>
+    <img src='/README_imgs/tsne_results.png' width='600' title='t-SNE Representation of Data Projected to Feature Space'>
 </p>
 
 # References
