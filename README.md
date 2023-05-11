@@ -3,7 +3,7 @@ Standard supervised learning using deep learning models requires a large amount 
 
 SimCLR, described in the Google AI paper "A Simple Framework for Contrastive Learning of Visual Representations" is one of many unsupervised learning approaches that can help reduce such cost.
 
-SimCLR was originally used with image datasets for visual representations; in this work, I make use of SimCLR and Dynamic Graph CNN ("Dynamic Graph CNN for Learning on Point Clouds") to acquire an unsupervised representation of objects in a point cloud dataset (ShapeNet), and compare the results to actual class labels.
+SimCLR was originally used with image datasets for visual representations; in this work, I make use of SimCLR and Dynamic Graph CNN (*Dynamic Graph CNN for Learning on Point Clouds*) to acquire an unsupervised representation of objects in a point cloud dataset (ShapeNet), and compare the results to actual class labels.
 
 
 # Project Overview
@@ -34,6 +34,12 @@ Alternative models include PointNet, PointNet++, PointTransformer, SE(3)-Transfo
 ## Contrastive Learning: Loss Functions
 
 ## Contrastive Learning: Model Implementation
+Model is implemented in `./src/model.py` file. 
+
+```
+import pytorch
+```
+
 
 # Running the Code
 ## Environment Setup
@@ -68,7 +74,13 @@ Run the `./data/preprocess_data.py` file, which contains the script to preproces
 ## Training the SimCLR Model
 - Default training epochs set at 10
 
-## Testing the SimCLR Model
+## Results
+Seeing the results is straightforward. The trained model, in its inference mode, will convert a point cloud dataset into 
+
+**Figure: t-SNE 2D Representation of Extracted Features**
+<p align='center'>
+    <img src='/README_imgs/tsne_results.png' width='600' title='Point Cloud of Sample Table'>
+</p>
 
 # References
 - [YouTube: Deep Learning on Point Clouds](https://youtu.be/gm_oW0bdzHs)
