@@ -38,16 +38,17 @@ class SimCLRPointCloud(nn.Module):
             h1 = global_max_pool(h_points_1, batch1)
             h2 = global_max_pool(h_points_2, batch2)
 
+            # Transformation for loss function
+            compact_h1 = self.mlp(h1)
+            compact_h2 = self.mlp(h2)
+            return h1, h2, compact_h1, compact_h2
+
         else:
             x1 = self.conv1(data.pos, data.batch)
             x2 = self.conv2(x1, data.batch)
             h_points = self.lin(torch.cat([x1, x2], dim=1))
             return global_max_pool(h_points, data.batch)
 
-        # Transformation for loss function
-        compact_h1 = self.mlp(h1)
-        compact_h2 = self.mlp(h2)
-        return h1, h2, compact_h1, compact_h2
 
 # %%
 if __name__=='__main__':
