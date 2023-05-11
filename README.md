@@ -24,21 +24,25 @@ The output of the dataset can be used for downstream tasks such as clustering, f
 ## Feature Extraction from Point Clouds
 EdgeConv model proposed by the paper *Dynamic Graph CNN for Learning on Point Clouds* is used to extract key features from point cloud data. A simple implementation is available in `torch_geometric`.
 
-Alternative models include PointNet, PointNet++, PointTransformer, SE(3)-Transformers, etc.
+EdgeConv model is used as a replacement to ResNet-50 base encoder in the original SimCLR paper, as the data type used in this work is point cloud, not image.
+
+EdgeConv model is selected because of its unique advantages, some of which include:
+- flexible feature learning
+- robust to point cloud perturbations
+- capable of end-to-end learning
+
+Alternatives to the EdgeConv model include include PointNet, PointNet++, PointTransformer, SE(3)-Transformers, etc.
 
 
-## Contrastive Learning: SimCLR
-- SimCLR (4x) (contrastive learning, without labels) was able to achieve the same classification accuracy as a ResNet-50 trained with supervised learning (with labels). [Ref]
-- SimCLR (4x) did so at the cost of more parameters (375 million vs. 24 million).
+## Contrastive Learning: the SimCLR Model
 
-## Contrastive Learning: Loss Functions
-
-## Contrastive Learning: Model Implementation
 Model is implemented in `./src/model.py` file. 
 
 ```
 import pytorch
 ```
+
+## Contrastive Learning: the Loss Function
 
 
 # Running the Code
