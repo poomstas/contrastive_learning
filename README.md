@@ -111,10 +111,21 @@ STEP_LR_GAMMA     = 0.5,
 
 ## Results
 The results analysis and visualization is included in `test.py` Python script. 
+In this file, I:
+- take a batch (size of 128) of datasets, apply t-SNE to reduce the dimensionality, and visualize them to see if the clusters coincide with the actual class labels,
+- calculate the similarity matrix, and take a sample object's point cloud data, determine the closest dataset, and visualize them both to see if they are in fact similar.
+
+Below is the t-SNE result visualized as a scatterplot with actual class labels depicted in color groups. Although the clusterings aren't perfectly clear-cut, they tend to go in groups, indicating that the latent representations learned by SimCLR model reflect the geometric similarities of point cloud dataset by objects.
 
 **Figure: t-SNE 2D Representation of Extracted Features**
 <p align='center'>
     <img src='/README_imgs/tsne_results.png' width='600' title='t-SNE Representation of Data Projected to Feature Space'>
+</p>
+
+
+**Figure: k**
+<p align='center'>
+    <img src='/README_imgs/tsne_results.png' width='600' title='asdfasdfasdfasdfasdfasdfasdfasdf'>
 </p>
 
 # References
