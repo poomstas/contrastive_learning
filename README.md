@@ -64,7 +64,7 @@ The essence of contrastive learning is captured in the loss function below. The 
 </p>
 
 - `z_i` and `z_j` are latent feature representations put through the projection head `g(·)`.
-- `tau` is the temperature parameter that controls the softness of the contrastive loss (small -> sensitive to differences)
+- `tau` is the 'temperature parameter' that controls the softness of the contrastive loss (small -> sensitive to differences)
 - `sim(u, v)` is the function that measures the similarity of two vectors. The original paper uses the dot-product of L2 normalized vectors `u` and `v`.
 
 # Running the Code
@@ -75,7 +75,13 @@ The essence of contrastive learning is captured in the loss function below. The 
 Once the environment is set up, run the `/data/download_shapenet_data.py` file to download the ShapeNet dataset to `./data/ShapeNet`. New directories will be created.
 
 ## ShapeNet EDA
-Some sample visualizations of the original data and augmented data is available in `/experiments/EDA.py`. See next session for information on augmentations.
+Some sample visualizations of the original data and augmented data is available in `/experiments/EDA.py`. Augmentations on the data is done on the fly in the model, which receives the augmentations as an argument form when it is instantiated. Augmentations include:
+
+- Rotation / Flip (if used layer is not rotation invariant)
+- Jittering (adding noise to the coordinates)
+- Shifting / Shearing
+
+Below are some examples of augmentations applied to table and motorbike point cloud datasets.
 
 
 **Figure: Sample Point Cloud Dataset of a Table, Before and After Augmentation (Jitter, Flip, Shear)**
@@ -88,20 +94,23 @@ Some sample visualizations of the original data and augmented data is available 
     <img src='/README_imgs/Motorbike.png' width='600' title='Point Cloud of Sample Motorbike'>
 </p>
 
-## Preprocess Dataset
-Run the `./data/preprocess_data.py` file, which contains the script to preprocess the dataset before it can be used for SimCLRv2 contrastive learning. The preprocessing steps include:
-
-- Store multiple data points into one Data object, using PyTorch
-- Compute data augmentations ()
-    - Rotation / Flip (if used layer is not rotation invariant)
-    - Jittering (adding noise to the coordinates)
-    - Shifting / Shearing
-
 ## Training the SimCLR Model
-- Default training epochs set at 10
+Main training script is in `train.py`. The script uses PyTorch Lightning module to integrate everything in a concise and readable form. Hyperparameters used to train are summarized below:
+
+```
+AUGMENTATIONS     = T.Compose([T.RandomJitter(0.005), T.RandomFlip(1), T.RandomShear(0.3)]),
+LR                = 0.001,
+BATCH_SIZE        = 60,
+NUM_EPOCHS        = 10,
+CATEGORIES        = ['Table', 'Lamp', 'Guitar', 'Motorbike'],
+N_DATASET         = 5000,
+TEMPERATURE       = 0.10,
+STEP_LR_STEP_SIZE = 20,
+STEP_LR_GAMMA     = 0.5,
+```
 
 ## Results
-Seeing the results is straightforward. The trained model, in its inference mode, will convert a point cloud dataset into 
+The results analysis and visualization is included in `test.py` Python script. 
 
 **Figure: t-SNE 2D Representation of Extracted Features**
 <p align='center'>
