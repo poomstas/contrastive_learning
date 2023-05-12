@@ -1,4 +1,4 @@
-# Contrastive Learning on Point Cloud Dataset ShapeNet
+# Contrastive Learning on Point Cloud Dataset
 Standard supervised learning using deep learning models requires a large amount of labeled datasets, the construction of which can be costly in time and labor. Many unsupervised learning methods are introduced to help overcome the challenge. 
 
 `SimCLR`, described in the Google AI paper *A Simple Framework for Contrastive Learning of Visual Representations* is one of many unsupervised learning approaches that can help reduce such cost.
