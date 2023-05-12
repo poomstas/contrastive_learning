@@ -122,11 +122,29 @@ Below is the t-SNE result visualized as a scatterplot with actual class labels d
     <img src='/README_imgs/tsne_results.png' width='600' title='t-SNE Representation of Data Projected to Feature Space'>
 </p>
 
+I now take a sample object, and determine the most similar object as determined by SimCLR's latent vector representation. Below is the selected sample (index 123):
 
-**Figure: k**
+**Figure: Sample Object: Lamp**
 <p align='center'>
-    <img src='/README_imgs/tsne_results.png' width='600' title='asdfasdfasdfasdfasdfasdfasdfasdf'>
+    <img src='/README_imgs/selected_lamp.png' width='600' title='Sample Object'>
 </p>
+
+**Figure: Closest Object: Lamp**
+<p align='center'>
+    <img src='/README_imgs/closest_lamp.png' width='600' title='Closest Object'>
+</p>
+
+**Figure: Sample Object: Table**
+<p align='center'>
+    <img src='/README_imgs/selected_table.png' width='600' title='Sample Object'>
+</p>
+
+**Figure: Closest Object: Table**
+<p align='center'>
+    <img src='/README_imgs/closest_table.png' width='600' title='Closest Object'>
+</p>
+
+The above sample visualizations show that the geometries of the most similar objects as determined by SimCLR are in fact similar.
 
 # References
 - [SimCLR Paper](https://arxiv.org/abs/2002.05709)
