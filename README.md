@@ -39,7 +39,7 @@ The model architecture used for `SimCLR` is visualized below (from the original 
     <img src='/README_imgs/SimCLR_model.png' width='400' title='SimCLR Model Architecture'>
 </p>
 
-SimCLR model learns latent representations "by maximizing agreement between differently augmented views of the same data example via a contrastive loss in the latent space" (Chen et al., 2020).
+`SimCLR` model learns latent representations "by maximizing agreement between differently augmented views of the same data example via a contrastive loss in the latent space" (Chen et al., 2020).
 
 You can guess that data augmentation is key to this approach.
 
@@ -51,20 +51,25 @@ Then the latent feature vectors (`h_i` and `h_j`) are put through a projection h
 
 At first glance, I found this counterintuitive as we already have a latent representation of the input after `f(·)`. However, the authors have demonstrated that using the projection head improves the representation quality of `h_i` and `h_j`.
 
-See section 4.2 of the original paper for a detailed explication of the choice to put a projection head.
+See `section 4.2` of the original paper for a detailed explication of the choice to put a projection head.
 
 Model is implemented in `./src/model.py` file. 
 
 ## Contrastive Learning: the Loss Function
-The essence of contrastive learning is captured in the loss function below. 
+
+The essence of contrastive learning is captured in the loss function below. The contrastive loss function (named NT-Xent, normalized temperature-scaled cross entropy loss) is one that measures the similarity between two vectors. 
 
 <p align='center'>
     <img src='/README_imgs/LossFunc.png' width='400' title='Contrastive Learning Loss Function'>
 </p>
 
+- `z_i` and `z_j` are latent feature representations put through the projection head `g(·)`.
+- `tau` is the temperature parameter that controls the softness of the contrastive loss (small -> sensitive to differences)
+- `sim(u, v)` is the function that measures the similarity of two vectors. The original paper uses the dot-product of L2 normalized vectors `u` and `v`.
+
 # Running the Code
 ## Environment Setup
-`/txt/installation_instructions.txt` file contains the conda install commands required to run the project.
+`/txt/installation_instructions.txt` file contains the conda and pip install commands required to set up the environment for the project.
 
 ## Download ShapeNet Dataset
 Once the environment is set up, run the `/data/download_shapenet_data.py` file to download the ShapeNet dataset to `./data/ShapeNet`. New directories will be created.
@@ -104,9 +109,7 @@ Seeing the results is straightforward. The trained model, in its inference mode,
 </p>
 
 # References
-- [YouTube: Deep Learning on Point Clouds](https://youtu.be/gm_oW0bdzHs)
-- [SimCLR Explained](https://youtu.be/APki8LmdJwY)
-- [Google AI Post on SimCLR](https://ai.googleblog.com/2020/04/advancing-self-supervised-and-semi.html)
 - [SimCLR Paper](https://arxiv.org/abs/2002.05709)
-
-TODO: Do supervised point cloud classification and compare results. See: [Video](https://www.youtube.com/watch?v=ctdi4Fjp_50&t=21s&ab_channel=ConnorShorten)
+- [YouTube: Deep Learning on Point Clouds](https://youtu.be/gm_oW0bdzHs)
+- [YouTube: SimCLR Explained](https://youtu.be/APki8LmdJwY)
+- [Google AI Post on SimCLR](https://ai.googleblog.com/2020/04/advancing-self-supervised-and-semi.html)
