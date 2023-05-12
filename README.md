@@ -1,7 +1,7 @@
 # Contrastive Learning on Point Cloud Dataset ShapeNet
 Standard supervised learning using deep learning models requires a large amount of labeled datasets, the construction of which can be costly in time and labor. Many unsupervised learning methods are introduced to help overcome the challenge. 
 
-`SimCLR`, described in the Google AI paper "A Simple Framework for Contrastive Learning of Visual Representations" is one of many unsupervised learning approaches that can help reduce such cost.
+`SimCLR`, described in the Google AI paper *A Simple Framework for Contrastive Learning of Visual Representations* is one of many unsupervised learning approaches that can help reduce such cost.
 
 `SimCLR` was originally used with image datasets for visual representations; in this work, I make use of `SimCLR` and `Dynamic Graph CNN` (*Dynamic Graph CNN for Learning on Point Clouds*) to acquire an unsupervised representation of objects in a point cloud dataset (`ShapeNet`), and compare the results to actual class labels.
 
@@ -15,7 +15,7 @@ Standard supervised learning using deep learning models requires a large amount 
 - I use [`SimCLRv2`](https://arxiv.org/abs/2002.05709), which was originally used on 2D image datasets, and 
 - [`ShapeNet`](https://shapenet.org/) dataset, which contains 3D point cloud of various objects with class labels. 
 - To extract latent features from point clouds, I use the [`EdgeConv` Model](https://arxiv.org/abs/1801.07829). 
-- Using PyTorch Lightning for fast implementation.
+- Using `PyTorch Lightning` for fast implementation.
 - During training, I pretend that the class labels don't exist.
 
 
@@ -24,9 +24,7 @@ The trained model's output can be used for downstream tasks such as clustering, 
 ## Feature Extraction from Point Clouds
 `EdgeConv` model proposed by the paper *Dynamic Graph CNN for Learning on Point Clouds* is used to extract key features from point cloud data. A simple implementation is available in `torch_geometric`.
 
-`EdgeConv` model is used as a replacement to `ResNet-50` base encoder in the original `SimCLR` paper, as the data type used in this work is point cloud, not image.
-
-`EdgeConv` model is selected because of its unique advantages, some of which include:
+`EdgeConv` model is used as a replacement to `ResNet-50` base encoder in the original `SimCLR` paper, as the data type used in this work is point cloud, not image. `EdgeConv` model is selected because of its unique advantages, some of which include:
 - flexible feature learning
 - robust to point cloud perturbations
 - capable of end-to-end learning
@@ -35,21 +33,34 @@ Alternatives to the `EdgeConv` model include include `PointNet`, `PointNet++`, `
 
 
 ## Contrastive Learning: the SimCLR Model
-The model architecture used for `SimCLR` is visualized below (from the original pape).
+The model architecture used for `SimCLR` is visualized below (from the original paper).
 
 <p align='center'>
-    <img src='/README_imgs/SimCLR_model.png' width='600' title='SimCLR Model Architecture'>
+    <img src='/README_imgs/SimCLR_model.png' width='400' title='SimCLR Model Architecture'>
 </p>
 
+SimCLR model learns latent representations "by maximizing agreement between differently augmented views of the same data example via a contrastive loss in the latent space" (Chen et al., 2020).
+
+You can guess that data augmentation is key to this approach.
+
+As such, the model first applies two different augmentation to the input data, as visualized by birfurcating nodes from `x`. Once `x_i` and `x_j` are created using augmentations, they are put through a base encoder `f(·)` to extract feature representations from augmented data samples. 
+
+Because the approach is not restrictive to the type of base encoder to use, I took the freedom to use the `EdgeConv` model, which is better suited for point cloud datasets.
+
+Then the latent feature vectors (`h_i` and `h_j`) are put through a projection head (either linear or nonlinear) `g(·)`. 
+
+At first glance, I found this counterintuitive as we already have a latent representation of the input after `f(·)`. However, the authors have demonstrated that using the projection head improves the representation quality of `h_i` and `h_j`.
+
+See section 4.2 of the original paper for a detailed explication of the choice to put a projection head.
 
 Model is implemented in `./src/model.py` file. 
 
-```
-import pytorch
-```
-
 ## Contrastive Learning: the Loss Function
+The essence of contrastive learning is captured in the loss function below. 
 
+<p align='center'>
+    <img src='/README_imgs/LossFunc.png' width='400' title='Contrastive Learning Loss Function'>
+</p>
 
 # Running the Code
 ## Environment Setup
